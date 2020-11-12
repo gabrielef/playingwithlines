@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Crazy Line Test</title>
+</head>
+
+<body>
+    <canvas id="crazyCanvas" width="1000" height="1000"></canvas>
+    <script>
+        var lastX = 0;
+        var lastY = 0;
+        var step = 5;
+        var delay = 250;
+
+        var boxW = 500;
+        var boxH = 500;
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+        function addPaths() {
+            setTimeout(function () {
+                ctx.moveTo(lastX, lastY);
+                lastX = Math.random() >= 0.5 ? lastX + getRandomInt(step) : lastX - getRandomInt(step);
+                if (lastX < 0)
+                    lastX = step;
+                if (lastX > boxW)
+                    lastX = lastX - step;
+                lastY = Math.random() >= 0.5 ? lastY + getRandomInt(step) : lastY - getRandomInt(step);
+                if (lastY < 0)
+                    lastY = step;
+                if (lastY > boxH)
+                    lastY = lastY - step;
+                ctx.lineTo(lastX, lastY);
+                console.log(lastX, lastY);
+                ctx.stroke();
+                addPaths();
+            }, delay);
+        }
+
+        var c = document.getElementById("crazyCanvas");
+        var ctx = c.getContext("2d");
+        ctx.beginPath();
+
+        addPaths();
+    </script>
+</body>
+
+</html>

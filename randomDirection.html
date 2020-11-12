@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Crazy Line Test</title>
+</head>
+
+<body>
+    <canvas id="crazyCanvas" width="1000" height="1000"></canvas>
+    <script>
+        var step = 5;
+        var delay = 10;
+
+        var boxW = 500;
+        var boxH = 500;
+
+        var lastX = boxW / 2;
+        var lastY = boxH / 2;
+
+        var c = document.getElementById("crazyCanvas");
+        var ctx = c.getContext("2d");
+        ctx.beginPath();
+
+        followRoute(getRoute());
+        // - scelgo lo start point
+        // - ad esempio il centro
+        // - estraggo la direzione
+        //applico la direzione fino a che non finisco contro il bordo
+        //se sono sul bordo estraggo una nuova direzione
+
+        function getRoute() {
+            //da 0 a 1
+            let alphaDeg = getRandomInt(90);
+            let alphaRad = alphaDeg * (Math.PI / 180);
+
+            let x = step * Math.cos(alphaRad);
+            let y = step * Math.sin(alphaRad);
+
+            if (Math.random() >= 0.5)
+                x = -1 * x;
+
+            if (Math.random() >= 0.5)
+                y = -1 * y;
+
+            if (x == 0 || y == 0) {
+                return getRoute();
+            }
+
+            return [x, y];
+        }
+
+        function followRoute(route) {
+            console.log(route);
+            let tmpLastX = lastX + route[0];
+            let tmpLastY = lastY + route[1];
+
+            if (tmpLastX < 0 || tmpLastX > boxW || tmpLastY < 0 || tmpLastY > boxH) {
+                followRoute(getRoute());
+            }
+            else {
+                lastX = tmpLastX;
+                lastY = tmpLastY;
+
+                setTimeout(function () {
+                    ctx.lineTo(lastX, lastY);
+                    console.log(lastX, lastY);
+                    ctx.stroke();
+                    followRoute(route);
+                }, delay);
+            }
+        }
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+    </script>
+</body>
+
+</html>
